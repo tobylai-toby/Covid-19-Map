@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <!-- MDUI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css" />
+    <title>中国累计本土新冠疫情统计</title>
+</head>
+
+<body class="mdui-theme-layout-light mdui-drawer-body-left mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-blue">
+            <button mdui-drawer="{target: '#drawer'}" class="mdui-btn mdui-btn-icon">
+                <i class="mdui-icon material-icons">menu</i>
+            </button>
+            <a href="javascript:;" class="mdui-typo-headline">中国本土疫情地图</a>
+            <a href="javascript:;" class="mdui-typo-title">by tobylai</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <a href="javascript:location.reload();" class="mdui-btn mdui-btn-icon">
+                <i class="mdui-icon material-icons">refresh</i>
+            </a>
+            <!-- <a href="javascript:;" class="mdui-btn mdui-btn-icon">
+                <i class="mdui-icon material-icons">more_vert</i>
+            </a> -->
+        </div>
+    </div>
+    <div class="mdui-drawer" id="drawer">
+        <div class="mdui-list">
+            <a href="/" class="mdui-list-item mdui-ripple mdui-list-item-active">中国累计本土新冠疫情统计</a>
+            <a href="/relative" class="mdui-list-item mdui-ripple">中国新增本土新冠疫情统计</a>
+        </div>
+    </div>
+
+    <div class="mdui-typo mdui-container" id="desc">
+        <h2>中国累计本土新冠疫情统计<small>&nbsp;by tobylai</small></h2>
+        数据来源：<a href="https://voice.baidu.com/act/newpneumonia/newpneumonia">百度 新型冠状病毒肺炎疫情实时大数据报告</a>
+        <br />上次更新：{{ last_update }}
+        <hr>
+    </div>
+    <div class="mdui-container">
+        <div id="map" style="width:100%; height:500px;"></div>
+    </div>
+
+    <!-- MDUI JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/maps/china.js"></script>
+    <script>
+        const $ = mdui.$;
+        const map = echarts.init(document.getElementById('map'), 'white', {
+            renderer: 'canvas'
+        });
+        const mapDom = document.getElementById('map');
+
+        function resizeMap() {
+            mapDom.style.height = `${$(window).height() - $("#desc").height()}px`;
+        }
+        // resizeMap();
+        // $(window).on('resize', resizeMap);
+        function fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "/ajax-chart-data",
+                dataType: 'json',
+                success: function(result) {
+                    map.hideLoading();
+                    map.setOption(result);
+                }
+            });
+        }
+
+        $(() => {
+            map.showLoading();
+            fetchData();
+            // setInterval(fetchData, 60000);
+        })
+    </script>
+</body>
+
+</html>
