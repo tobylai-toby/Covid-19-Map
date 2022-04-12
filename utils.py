@@ -12,8 +12,7 @@ def getAllCovid19Data():
                        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"})
     req.encoding = req.apparent_encoding
     dom = etree.HTML(req.text, etree.HTMLParser())
-    result = json.loads(dom.xpath('//*[@id="captain-config"]/text()')[0])
-    return result
+    return json.loads(dom.xpath('//*[@id="captain-config"]/text()')[0])
 
 # 本土累计
 # @return
@@ -40,13 +39,13 @@ def chinaCovid19Map(type_=["confirmed"],size=["900px","500px"]) -> Union[dict, M
     _ill=0
     _ill+=sum(confirmed)+sum(asymptomatic)
 
-    cn_map = (
-        Map(init_opts=opts.InitOpts(width=size[0], height=size[1]))
-        .set_global_opts(
-            title_opts=opts.TitleOpts(subtitle="累计确诊/无症状：{}".format(_ill)),
-            visualmap_opts=opts.VisualMapOpts(max_=max_aver),
-        )
+    cn_map = Map(
+        init_opts=opts.InitOpts(width=size[0], height=size[1])
+    ).set_global_opts(
+        title_opts=opts.TitleOpts(subtitle=f"累计确诊/无症状：{_ill}"),
+        visualmap_opts=opts.VisualMapOpts(max_=max_aver),
     )
+
     if "confirmed" in type_:
         cn_map.add("累计确诊", [tuple(zp) for zp in zip(provinces, confirmed)], "china",
                         is_map_symbol_show=False)
@@ -82,13 +81,13 @@ def chinaCovid19MapRelative(type_=["confirmed"],size=["900px","500px"]) -> Union
     _ill=0
     _ill+=sum(confirmed)+sum(asymptomatic)
 
-    cn_map = (
-        Map(init_opts=opts.InitOpts(width=size[0], height=size[1]))
-        .set_global_opts(
-            title_opts=opts.TitleOpts(subtitle="新增确诊/无症状：{}".format(_ill)),
-            visualmap_opts=opts.VisualMapOpts(max_=max_aver),
-        )
+    cn_map = Map(
+        init_opts=opts.InitOpts(width=size[0], height=size[1])
+    ).set_global_opts(
+        title_opts=opts.TitleOpts(subtitle=f"新增确诊/无症状：{_ill}"),
+        visualmap_opts=opts.VisualMapOpts(max_=max_aver),
     )
+
     if "confirmed" in type_:
         cn_map.add("新增确诊", [tuple(zp) for zp in zip(provinces, confirmed)], "china",
                         is_map_symbol_show=False)
