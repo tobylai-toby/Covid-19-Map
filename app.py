@@ -1,7 +1,11 @@
-from flask import Flask,render_template
-from jinja2 import Markup, Environment, FileSystemLoader
+import os
+import sys
+
+from flask import Flask, render_template
+from jinja2 import Environment, FileSystemLoader, Markup
 from pyecharts.globals import CurrentConfig
-import os,sys,utils
+
+import utils
 
 curdir=os.path.abspath(os.path.dirname(__file__))
 os.chdir(curdir)
